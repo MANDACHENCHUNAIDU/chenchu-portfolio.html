@@ -1,0 +1,1768 @@
+<!DOCTYPE html>
+<!--
+  ============================================================
+  PORTFOLIO WEBSITE - Manda Chenchu Naidu
+  ============================================================
+  This file is ONE single HTML file that contains 3 things:
+    1. HTML  → The actual content (text, buttons, sections)
+    2. CSS   → The styling (colors, fonts, layout, animations)
+    3. JS    → The interactivity (scroll effects, count-up numbers)
+
+  HOW THE FILE IS ORGANIZED:
+  ─────────────────────────────
+  <head>        → Settings + Google Fonts + all CSS styles
+  <body>        → All visible content on the page
+  <script>      → JavaScript code at the bottom of body
+
+  SECTIONS ON THE PAGE (in order):
+    • NAV         → Top navigation bar
+    • HERO        → Big intro section (your name + role)
+    • STATS       → Numbers strip (8 certs, 2 internships...)
+    • ABOUT       → About me + contact info
+    • SKILLS      → Your skill pills grouped by category
+    • EDUCATION   → Your 3 education cards
+    • EXPERIENCE  → Your work experience cards
+    • CERTIFICATIONS → All 10 certificates
+    • CONTACT     → Contact links + message form
+    • FOOTER      → Bottom bar
+  ============================================================
+-->
+<html lang="en">
+
+<!-- ============================================================
+  HEAD SECTION
+  Everything inside <head> is NOT visible on the page.
+  It contains settings, font imports, and all CSS styles.
+============================================================ -->
+<head>
+
+  <!-- Tell the browser this file uses UTF-8 characters (supports all languages) -->
+  <meta charset="UTF-8">
+
+  <!-- Make the website look good on mobile phones too (responsive design) -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- The text shown on the browser tab -->
+  <title>Manda Chenchu Naidu — Portfolio</title>
+
+  <!--
+    Import 2 beautiful fonts from Google Fonts (free):
+    • Syne    → Used for big headings (bold, modern look)
+    • Outfit  → Used for body text (clean, readable)
+  -->
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;700;800&family=Outfit:wght@300;400;500;600&display=swap" rel="stylesheet">
+
+  <!-- ============================================================
+    CSS STYLES
+    Everything inside <style> controls HOW the page looks.
+    CSS works like: selector { property: value; }
+    Example: body { background: black; color: white; }
+  ============================================================ -->
+  <style>
+
+    /* ── RESET ──────────────────────────────────────────────────
+       By default, browsers add their own padding/margin to elements.
+       This removes ALL of that so we start from scratch.
+       box-sizing: border-box → makes width/padding calculations easier.
+    ─────────────────────────────────────────────────────────── */
+    *, *::before, *::after {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    /* ── COLOR VARIABLES ────────────────────────────────────────
+       Instead of typing color codes everywhere, we create
+       "variables" once here and reuse them using var(--name).
+
+       To change the whole color theme, just edit these values!
+       Example: Change --accent from blue to green → all blue
+       highlights on the page will turn green automatically.
+    ─────────────────────────────────────────────────────────── */
+    :root {
+      --bg:      #07080f;           /* Main background (very dark navy) */
+      --surface: #0e0f1a;           /* Slightly lighter background for sections */
+      --card:    #13141f;           /* Card background color */
+      --border:  rgba(255,255,255,0.07); /* Very subtle white border */
+      --accent:  #5e8bff;           /* Main blue highlight color */
+      --accent2: #ff6b9d;           /* Pink highlight color */
+      --accent3: #43e8c8;           /* Teal/green highlight color */
+      --text:    #eef0ff;           /* Main text color (almost white) */
+      --muted:   rgba(220,224,255,0.45); /* Dimmed text color */
+      --glow:    rgba(94,139,255,0.22);  /* Blue glow for hover effects */
+    }
+
+    /* ── SMOOTH SCROLL ──────────────────────────────────────────
+       When you click a nav link like "About",
+       the page scrolls smoothly instead of jumping.
+    ─────────────────────────────────────────────────────────── */
+    html {
+      scroll-behavior: smooth;
+    }
+
+    /* ── BODY (BASE STYLES) ─────────────────────────────────────
+       Styles applied to the whole page.
+    ─────────────────────────────────────────────────────────── */
+    body {
+      font-family: 'Outfit', sans-serif; /* Default font for all text */
+      background: var(--bg);            /* Dark background */
+      color: var(--text);               /* Default text color */
+      overflow-x: hidden;               /* Hide any accidental horizontal scroll */
+    }
+
+    /* ── GLOWING ORBS (Background decoration) ──────────────────
+       These are large blurry colored circles fixed in the background.
+       They give the page a "glowing" atmospheric effect.
+       position:fixed → they stay in place as you scroll.
+       filter:blur(90px) → makes them super soft/blurry.
+       pointer-events:none → you can't accidentally click on them.
+       animation:drift → they slowly float up and down.
+    ─────────────────────────────────────────────────────────── */
+    .orb {
+      position: fixed;
+      border-radius: 50%;       /* Makes it a circle */
+      filter: blur(90px);       /* Heavy blur = soft glow effect */
+      pointer-events: none;     /* Can't be clicked */
+      z-index: 0;               /* Behind all content */
+      animation: drift ease-in-out infinite; /* Floating animation */
+    }
+
+    /* Blue orb - top left corner */
+    .orb-1 {
+      width: 560px; height: 560px;
+      background: radial-gradient(circle, rgba(94,139,255,.14), transparent 70%);
+      top: -180px; left: -120px;
+      animation-duration: 18s;
+    }
+
+    /* Pink orb - bottom right corner */
+    .orb-2 {
+      width: 420px; height: 420px;
+      background: radial-gradient(circle, rgba(255,107,157,.1), transparent 70%);
+      bottom: 5%; right: -100px;
+      animation-duration: 24s;
+      animation-delay: -8s; /* Start 8 seconds into the animation */
+    }
+
+    /* Teal orb - middle of page */
+    .orb-3 {
+      width: 320px; height: 320px;
+      background: radial-gradient(circle, rgba(67,232,200,.09), transparent 70%);
+      top: 50%; left: 35%;
+      animation-duration: 28s;
+      animation-delay: -4s;
+    }
+
+    /* The floating animation: moves up 36px at the halfway point */
+    @keyframes drift {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50%       { transform: translateY(-36px) scale(1.05); }
+    }
+
+    /* ── GRID BACKGROUND LINES ──────────────────────────────────
+       body::after creates a subtle grid pattern on the background.
+       It uses two linear-gradients to draw faint horizontal
+       and vertical lines every 60px.
+       This is a CSS trick — ::after adds a fake invisible element.
+    ─────────────────────────────────────────────────────────── */
+    body::after {
+      content: '';          /* Required for ::after to show */
+      position: fixed;
+      inset: 0;             /* Shorthand for top:0; right:0; bottom:0; left:0 */
+      background-image:
+        linear-gradient(rgba(94,139,255,.03) 1px, transparent 1px),     /* Horizontal lines */
+        linear-gradient(90deg, rgba(94,139,255,.03) 1px, transparent 1px); /* Vertical lines */
+      background-size: 60px 60px; /* Grid cell size */
+      pointer-events: none;
+      z-index: 0;
+    }
+
+
+    /* ============================================================
+       NAVIGATION BAR
+       Fixed at the top of the screen — stays visible as you scroll.
+    ============================================================ */
+    nav {
+      position: fixed;       /* Sticks to top while scrolling */
+      top: 0; left: 0; right: 0;
+      z-index: 100;          /* Appears above everything else */
+      padding: 20px 6%;      /* 6% from left/right edges */
+      display: flex;
+      justify-content: space-between; /* Logo left, links center, button right */
+      align-items: center;
+      background: rgba(7,8,15,.7);    /* Semi-transparent dark background */
+      backdrop-filter: blur(24px);    /* Blurs content BEHIND the nav (glass effect) */
+      border-bottom: 1px solid var(--border);
+      transition: padding .3s; /* Smooth padding change when scrolling */
+    }
+
+    /* "Chenchu." logo text in the nav */
+    .nav-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.25rem;
+      letter-spacing: -.5px;
+    }
+    /* The blue dot after the name */
+    .nav-logo span { color: var(--accent); }
+
+    /* The list of nav links (About, Skills, etc.) */
+    .nav-links {
+      display: flex;
+      gap: 32px;             /* Space between each link */
+      list-style: none;      /* Remove bullet points from <ul> */
+    }
+
+    /* Individual nav link styling */
+    .nav-links a {
+      text-decoration: none; /* Remove underline */
+      color: var(--muted);
+      font-size: 14px;
+      transition: color .2s;
+      position: relative;    /* Needed for the ::after underline trick below */
+    }
+
+    /* Animated underline that slides in on hover.
+       It's a fake element that starts at width=0 and grows to full width. */
+    .nav-links a::after {
+      content: '';
+      position: absolute;
+      bottom: -4px; left: 0; right: 0;
+      height: 1.5px;
+      background: var(--accent);
+      transform: scaleX(0);           /* Hidden by default (scaled to 0 width) */
+      transform-origin: left;         /* Grows from the left side */
+      transition: transform .25s;
+    }
+    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover::after { transform: scaleX(1); } /* Slide in on hover */
+
+    /* "Hire Me" button in the nav */
+    .nav-cta {
+      padding: 9px 22px;
+      background: transparent;
+      border: 1.5px solid var(--accent);
+      border-radius: 50px;    /* Pill shape */
+      color: var(--accent);
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px; font-weight: 500;
+      cursor: pointer;
+      transition: background .2s, color .2s, box-shadow .2s;
+    }
+    /* Fill with blue color on hover */
+    .nav-cta:hover {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 28px var(--glow);
+    }
+
+
+    /* ============================================================
+       HERO SECTION
+       The very first thing visitors see — your name, role, buttons.
+       Takes up the full screen height (100vh = 100% of viewport height).
+    ============================================================ */
+    #hero {
+      min-height: 100vh;           /* At least as tall as the screen */
+      display: flex;
+      align-items: center;         /* Vertically center the content */
+      padding: 120px 6% 80px;      /* Top padding to clear the fixed nav */
+      position: relative;
+      z-index: 1;
+    }
+
+    /* Two-column layout: left = text, right = avatar card */
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1fr auto; /* Left takes remaining space, right is auto */
+      gap: 60px;
+      align-items: center;
+      width: 100%;
+      max-width: 1100px;
+    }
+
+    /* "Open to opportunities" tag above the name */
+    .hero-tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      background: rgba(94,139,255,.1);
+      border: 1px solid rgba(94,139,255,.25);
+      border-radius: 50px;
+      padding: 7px 16px;
+      font-size: 13px;
+      color: var(--accent);
+      margin-bottom: 24px;
+      animation: fadeUp .8s ease both; /* Slides up when page loads */
+    }
+
+    /* The blinking green dot inside the tag */
+    .dot-anim {
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      animation: blink 1.4s infinite; /* Blinks every 1.4 seconds */
+    }
+
+    /* Blink animation: goes from visible to dim and back */
+    @keyframes blink {
+      0%, 100% { opacity: 1; }
+      50%       { opacity: .2; }
+    }
+
+    /* Your big name heading */
+    .hero-name {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(2.8rem, 7vw, 6rem); /* Responsive: min 2.8rem, grows with screen, max 6rem */
+      font-weight: 800;
+      line-height: 1.0;
+      letter-spacing: -2px;
+      animation: fadeUp .9s .1s ease both; /* .1s delay so it appears after the tag */
+    }
+    /* "Chenchu" line — outlined (hollow) text effect */
+    .hero-name .outline {
+      color: transparent;
+      -webkit-text-stroke: 1.5px rgba(220,224,255,.25); /* Border around text */
+    }
+    /* "Naidu." — in blue accent color */
+    .hero-name .hi { color: var(--accent); }
+
+    /* "MERN Full Stack Dev Trainee · NxtWave" subtitle */
+    .hero-role {
+      font-size: clamp(.95rem, 2vw, 1.2rem);
+      color: var(--muted);
+      margin-top: 18px;
+      font-weight: 300;
+      animation: fadeUp 1s .2s ease both;
+    }
+    .hero-role strong { color: var(--text); font-weight: 500; }
+
+    /* The paragraph description below your role */
+    .hero-desc {
+      max-width: 540px;
+      font-size: 15px;
+      line-height: 1.85;  /* Comfortable reading line spacing */
+      color: var(--muted);
+      margin-top: 18px;
+      animation: fadeUp 1s .3s ease both;
+    }
+
+    /* The two buttons row */
+    .hero-btns {
+      display: flex;
+      gap: 14px;
+      flex-wrap: wrap;    /* Wrap to next line on small screens */
+      margin-top: 34px;
+      animation: fadeUp 1s .4s ease both;
+    }
+
+    /* Blue filled "View Certifications" button */
+    .btn-primary {
+      padding: 14px 32px;
+      background: var(--accent);
+      border: none;
+      border-radius: 50px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px; font-weight: 500;
+      cursor: pointer;
+      transition: transform .2s, box-shadow .2s;
+    }
+    .btn-primary:hover {
+      transform: translateY(-3px);                    /* Lifts up on hover */
+      box-shadow: 0 14px 40px rgba(94,139,255,.4);    /* Glowing shadow */
+    }
+
+    /* Transparent "Contact Me" button */
+    .btn-ghost {
+      padding: 14px 32px;
+      background: transparent;
+      border: 1.5px solid var(--border);
+      border-radius: 50px;
+      color: var(--muted);
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px;
+      cursor: pointer;
+      transition: border-color .2s, color .2s, transform .2s;
+    }
+    .btn-ghost:hover {
+      border-color: var(--text);
+      color: var(--text);
+      transform: translateY(-3px);
+    }
+
+    /* ── AVATAR CARD (right side of hero) ───────────────────────
+       The card on the right showing your emoji, name, badges etc.
+    ─────────────────────────────────────────────────────────── */
+    .hero-avatar {
+      animation: fadeUp 1s .2s ease both;
+    }
+    .avatar-card {
+      width: 260px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 30px 24px;
+      text-align: center;
+      box-shadow: 0 24px 60px rgba(0,0,0,.4);
+      position: relative;
+      overflow: hidden;  /* Hides the colorful top bar corners */
+    }
+    /* The 3-color gradient stripe at the very top of the card */
+    .avatar-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 3px;
+      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
+    }
+    .avatar-emoji    { font-size: 72px; display: block; margin-bottom: 14px; }
+    .avatar-name     { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1rem; }
+    .avatar-title    { font-size: 12px; color: var(--muted); margin-top: 4px; }
+    .avatar-location { font-size: 12px; color: var(--muted); margin-top: 8px; }
+
+    /* The small skill tags inside the card */
+    .avatar-badges {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      justify-content: center;
+      margin-top: 16px;
+    }
+    .abadge {
+      font-size: 11px;
+      padding: 4px 10px;
+      border-radius: 50px;
+      background: rgba(94,139,255,.12);
+      border: 1px solid rgba(94,139,255,.2);
+      color: var(--accent);
+    }
+
+    /* "Available for Work" green pill at the bottom of card */
+    .status-pill {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      background: rgba(67,232,200,.08);
+      border: 1px solid rgba(67,232,200,.2);
+      border-radius: 50px;
+      padding: 6px 12px;
+      font-size: 11px;
+      color: var(--accent3);
+      margin-top: 16px;
+      justify-content: center;
+    }
+    /* Blinking dot inside the status pill */
+    .status-dot {
+      width: 6px; height: 6px;
+      background: var(--accent3);
+      border-radius: 50%;
+      animation: blink 1.4s infinite;
+    }
+
+
+    /* ============================================================
+       STATS STRIP
+       The row of 4 numbers: "8+ Certifications", "2+ Internships"...
+    ============================================================ */
+    .stats-strip {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 28px 6%;
+      display: flex;
+    }
+
+    /* Each individual stat block */
+    .stat-item {
+      flex: 1;                    /* Each takes equal width */
+      text-align: center;
+      padding: 0 16px;
+      border-right: 1px solid var(--border); /* Divider between items */
+    }
+    .stat-item:last-child { border-right: none; } /* No divider after last item */
+
+    /* The big number (e.g. "8") */
+    .stat-num {
+      font-family: 'Syne', sans-serif;
+      font-size: 2.2rem;
+      font-weight: 800;
+      line-height: 1;
+    }
+    /* The "+" sign in blue */
+    .stat-num span { color: var(--accent); }
+
+    /* The label below the number */
+    .stat-label { font-size: 12px; color: var(--muted); margin-top: 5px; letter-spacing: .4px; }
+
+
+    /* ============================================================
+       SHARED SECTION STYLES
+       Styles used by ALL sections (About, Skills, Education, etc.)
+    ============================================================ */
+    section {
+      position: relative;
+      z-index: 1;
+      padding: 90px 6%; /* Generous top/bottom padding + 6% from edges */
+    }
+
+    /* Small label above each section title (e.g. "Who I Am") */
+    .section-label {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 12px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 14px;
+      font-weight: 500;
+    }
+    /* The short horizontal line before the label text */
+    .section-label::before {
+      content: '';
+      width: 28px; height: 1px;
+      background: var(--accent);
+    }
+
+    /* Section heading (e.g. "About Me", "Skills & Tech Stack") */
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-size: clamp(1.9rem, 4vw, 2.8rem); /* Responsive font size */
+      font-weight: 800;
+      letter-spacing: -1px;
+      line-height: 1.1;
+      margin-bottom: 12px;
+    }
+
+    /* Subtitle paragraph below section heading */
+    .section-sub {
+      font-size: 15px;
+      color: var(--muted);
+      max-width: 480px;
+      line-height: 1.7;
+    }
+
+
+    /* ============================================================
+       ABOUT SECTION
+    ============================================================ */
+    #about { background: var(--surface); } /* Slightly lighter background */
+
+    /* Two columns: left = text paragraph, right = highlight cards */
+    .about-grid {
+      display: grid;
+      grid-template-columns: 1.1fr 1fr;
+      gap: 70px;
+      align-items: start;
+      margin-top: 50px;
+    }
+
+    .about-text p {
+      font-size: 15px;
+      color: var(--muted);
+      line-height: 1.85;
+      margin-bottom: 14px;
+    }
+    .about-text strong { color: var(--text); }
+
+    /* 2x2 grid for the info items (Location, Phone, Email, Status) */
+    .info-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-top: 24px;
+    }
+
+    /* Each info box */
+    .info-item {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px 16px;
+    }
+    .info-item .ilabel { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+    .info-item .ival   { font-size: 14px; font-weight: 500; margin-top: 3px; }
+
+    /* The 4 highlight cards on the right side of About */
+    .about-right { display: flex; flex-direction: column; gap: 16px; }
+
+    .highlight-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 24px;
+      transition: border-color .2s, transform .2s;
+    }
+    /* Slide right and show blue border on hover */
+    .highlight-card:hover {
+      border-color: var(--accent);
+      transform: translateX(6px);
+    }
+    .hc-icon  { font-size: 28px; margin-bottom: 10px; }
+    .hc-title { font-family: 'Syne', sans-serif; font-size: .95rem; font-weight: 700; margin-bottom: 6px; }
+    .hc-desc  { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+
+    /* ============================================================
+       SKILLS SECTION
+       3-column grid of skill group cards.
+    ============================================================ */
+    .skills-section {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr; /* 3 equal columns */
+      gap: 24px;
+      margin-top: 50px;
+    }
+
+    /* Each skill group card (e.g. "Core Programming") */
+    .skill-group {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 26px;
+      transition: border-color .2s, transform .2s;
+    }
+    .skill-group:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px); /* Lifts up on hover */
+    }
+
+    /* Title of each skill group */
+    .sg-title {
+      font-family: 'Syne', sans-serif;
+      font-size: .9rem;
+      font-weight: 700;
+      margin-bottom: 18px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sg-icon { font-size: 18px; }
+
+    /* Container for the pill tags */
+    .skill-pill-list { display: flex; flex-wrap: wrap; gap: 8px; }
+
+    /* Individual skill pill (e.g. "JavaScript (ES6+)") */
+    .skill-pill {
+      font-size: 12.5px;
+      padding: 6px 13px;
+      border-radius: 50px;
+      background: rgba(94,139,255,.1);
+      border: 1px solid rgba(94,139,255,.18);
+      color: var(--text);
+      transition: background .2s, border-color .2s;
+    }
+    .skill-pill:hover { background: rgba(94,139,255,.22); border-color: var(--accent); }
+
+    /* Pink variant pills */
+    .skill-pill.t2 { background: rgba(255,107,157,.08); border-color: rgba(255,107,157,.18); }
+    .skill-pill.t2:hover { background: rgba(255,107,157,.2); border-color: var(--accent2); }
+
+    /* Teal variant pills */
+    .skill-pill.t3 { background: rgba(67,232,200,.08); border-color: rgba(67,232,200,.18); }
+    .skill-pill.t3:hover { background: rgba(67,232,200,.2); border-color: var(--accent3); }
+
+
+    /* ============================================================
+       EDUCATION SECTION
+       3 cards showing your 3 levels of education.
+    ============================================================ */
+    #education { background: var(--surface); }
+
+    .edu-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 22px;
+      margin-top: 50px;
+    }
+
+    .edu-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 26px;
+      position: relative;
+      overflow: hidden;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .edu-card:hover {
+      border-color: rgba(94,139,255,.3);
+      transform: translateY(-6px);
+      box-shadow: 0 20px 50px rgba(0,0,0,.35);
+    }
+
+    /* Colored top stripe for each card (different gradient per card) */
+    .edu-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+    }
+    .edu-card.e1::before { background: linear-gradient(90deg, var(--accent), var(--accent2)); }  /* Blue → Pink */
+    .edu-card.e2::before { background: linear-gradient(90deg, var(--accent2), var(--accent3)); } /* Pink → Teal */
+    .edu-card.e3::before { background: linear-gradient(90deg, var(--accent3), var(--accent)); }  /* Teal → Blue */
+
+    .edu-icon   { font-size: 32px; margin-bottom: 14px; }
+    .edu-degree { font-family: 'Syne', sans-serif; font-size: 1rem; font-weight: 700; margin-bottom: 6px; line-height: 1.3; }
+    .edu-school { font-size: 13px; color: var(--accent); margin-bottom: 8px; }
+    .edu-meta   { font-size: 12.5px; color: var(--muted); }
+
+    /* GPA/Grade badge at the bottom of education card */
+    .edu-gpa {
+      display: inline-block;
+      margin-top: 12px;
+      background: rgba(67,232,200,.1);
+      border: 1px solid rgba(67,232,200,.2);
+      color: var(--accent3);
+      font-size: 12px;
+      padding: 4px 12px;
+      border-radius: 50px;
+    }
+
+
+    /* ============================================================
+       EXPERIENCE SECTION
+       2-column grid of work experience cards.
+    ============================================================ */
+    .exp-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      margin-top: 50px;
+    }
+
+    .exp-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 20px;
+      padding: 28px;
+      transition: border-color .2s, transform .2s;
+    }
+    .exp-card:hover { border-color: rgba(94,139,255,.3); transform: translateY(-4px); }
+
+    /* Top row: company name + badge */
+    .exp-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 14px;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .exp-company { font-family: 'Syne', sans-serif; font-size: 1.1rem; font-weight: 700; }
+
+    /* "Internship" / "Training Program" badge */
+    .exp-type {
+      font-size: 11px;
+      padding: 4px 12px;
+      border-radius: 50px;
+      background: rgba(94,139,255,.12);
+      border: 1px solid rgba(94,139,255,.2);
+      color: var(--accent);
+    }
+    /* Pink variant for "Trainee" badge */
+    .exp-type.trainee {
+      background: rgba(255,107,157,.1);
+      border-color: rgba(255,107,157,.2);
+      color: var(--accent2);
+    }
+
+    .exp-role   { font-size: 14px; color: var(--accent3); margin-bottom: 6px; font-weight: 500; }
+    .exp-period { font-size: 12px; color: var(--muted); margin-bottom: 14px; }
+    .exp-desc   { font-size: 13.5px; color: var(--muted); line-height: 1.75; }
+
+
+    /* ============================================================
+       CERTIFICATIONS SECTION
+       Auto-fill grid of certification cards.
+    ============================================================ */
+    #certifications { background: var(--surface); }
+
+    /* Grid that automatically creates columns based on available space */
+    .cert-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+      gap: 16px;
+      margin-top: 50px;
+    }
+
+    /* Each certification card */
+    .cert-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 20px 22px;
+      display: flex;
+      gap: 14px;
+      align-items: flex-start;
+      transition: border-color .2s, transform .2s;
+    }
+    .cert-card:hover { border-color: var(--accent); transform: translateY(-4px); }
+
+    .cert-icon   { font-size: 26px; flex-shrink: 0; }  /* flex-shrink:0 = icon won't get squished */
+    .cert-name   { font-size: 14px; font-weight: 500; line-height: 1.4; margin-bottom: 4px; }
+    .cert-issuer { font-size: 12px; color: var(--accent); margin-bottom: 3px; }
+    .cert-date   { font-size: 11.5px; color: var(--muted); }
+
+
+    /* ============================================================
+       CONTACT SECTION
+    ============================================================ */
+    #contact { text-align: center; }
+    .contact-inner { max-width: 640px; margin: 0 auto; }
+    .contact-inner .section-label { justify-content: center; }
+    .contact-inner p { color: var(--muted); font-size: 15px; line-height: 1.8; margin: 16px 0 36px; }
+
+    /* Row of contact link cards (email, phone, LinkedIn) */
+    .contact-cards {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin-bottom: 36px;
+    }
+
+    /* Each clickable contact card */
+    .contact-card {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 13px 18px;
+      text-decoration: none;
+      color: var(--text);
+      font-size: 13.5px;
+      transition: border-color .2s, transform .2s, box-shadow .2s;
+    }
+    .contact-card:hover {
+      border-color: var(--accent);
+      transform: translateY(-4px);
+      box-shadow: 0 12px 28px rgba(94,139,255,.2);
+    }
+    .contact-card .cicon { font-size: 18px; }
+
+    /* The message form card */
+    .contact-form {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 22px;
+      padding: 32px;
+      text-align: left;
+    }
+
+    /* Name + Email side by side */
+    .form-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 12px;
+    }
+
+    /* Each form field group (label + input) */
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      margin-bottom: 12px;
+    }
+    .form-group label { font-size: 11.5px; color: var(--muted); text-transform: uppercase; letter-spacing: .5px; }
+
+    /* Text input and textarea styling */
+    .form-group input,
+    .form-group textarea {
+      background: var(--bg);
+      border: 1.5px solid var(--border);
+      border-radius: 10px;
+      padding: 12px 15px;
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      outline: none;
+      transition: border-color .2s;
+      resize: none;  /* Prevents user from resizing textarea */
+    }
+    .form-group input:focus,
+    .form-group textarea:focus { border-color: var(--accent); } /* Blue border when focused */
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color: rgba(255,255,255,.18); }
+
+    /* Send button */
+    .btn-send {
+      width: 100%;
+      padding: 14px;
+      background: var(--accent);
+      border: none;
+      border-radius: 10px;
+      color: #fff;
+      font-family: 'Outfit', sans-serif;
+      font-size: 15px; font-weight: 500;
+      cursor: pointer;
+      transition: box-shadow .2s, transform .2s;
+    }
+    .btn-send:hover { box-shadow: 0 8px 32px rgba(94,139,255,.45); transform: translateY(-2px); }
+
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      position: relative;
+      z-index: 1;
+      border-top: 1px solid var(--border);
+      padding: 28px 6%;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 14px;
+    }
+    footer p { font-size: 13px; color: var(--muted); }
+    .footer-logo { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 1.1rem; }
+    .footer-logo span { color: var(--accent); }
+
+    /* Social icon links row */
+    .social-links { display: flex; gap: 10px; }
+    .social-links a {
+      width: 36px; height: 36px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none;
+      font-size: 15px;
+      transition: border-color .2s, transform .2s;
+    }
+    .social-links a:hover { border-color: var(--accent); transform: translateY(-3px); }
+
+
+    /* ============================================================
+       SCROLL REVEAL ANIMATION
+       Elements with class "reveal" start invisible and slide up.
+       When they enter the viewport, JavaScript adds "visible"
+       class which triggers the transition to full opacity.
+    ============================================================ */
+    .reveal {
+      opacity: 0;                             /* Starts invisible */
+      transform: translateY(28px);            /* Starts 28px below */
+      transition: opacity .7s ease, transform .7s ease; /* Smooth animation */
+    }
+    .reveal.visible {
+      opacity: 1;                             /* Becomes visible */
+      transform: none;                        /* Moves to normal position */
+    }
+
+    /* The slide-up animation used for hero elements on page load */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: none; }
+    }
+
+
+    /* ============================================================
+       RESPONSIVE: MOBILE STYLES
+       When screen width is 900px or less (tablets/phones),
+       switch to single-column layouts.
+    ============================================================ */
+    @media (max-width: 900px) {
+      .nav-links  { display: none; }                   /* Hide nav links on mobile */
+      .hero-grid  { grid-template-columns: 1fr; }      /* Hero: single column */
+      .hero-avatar { display: none; }                  /* Hide avatar card on mobile */
+      .about-grid { grid-template-columns: 1fr; gap: 40px; } /* About: stack vertically */
+      .skills-section { grid-template-columns: 1fr; }  /* Skills: one column */
+      .edu-grid   { grid-template-columns: 1fr; }      /* Education: one column */
+      .exp-grid   { grid-template-columns: 1fr; }      /* Experience: one column */
+      .stats-strip { flex-wrap: wrap; }
+      .stat-item  { min-width: 45%; border-right: none; border-bottom: 1px solid var(--border); padding: 14px; }
+      .form-row   { grid-template-columns: 1fr; }      /* Form: stack name/email */
+    }
+
+  </style>
+</head>
+
+
+<!-- ============================================================
+  BODY SECTION
+  Everything visible on the page goes inside <body>.
+  Structure:
+    → Background orbs (decorative)
+    → <nav> Navigation bar
+    → <section id="hero"> Hero
+    → <div class="stats-strip"> Stats numbers
+    → <section id="about"> About
+    → <section id="skills"> Skills
+    → <section id="education"> Education
+    → <section id="experience"> Experience
+    → <section id="certifications"> Certifications
+    → <section id="contact"> Contact
+    → <footer> Footer
+    → <script> JavaScript
+============================================================ -->
+<body>
+
+  <!-- ══════════════════════════════════════════════════════════
+    BACKGROUND DECORATION
+    These 3 divs are the blurry glowing orbs in the background.
+    They are positioned with CSS (fixed, top/left/bottom/right).
+    The actual colors and animations are in the CSS above.
+  ══════════════════════════════════════════════════════════ -->
+  <div class="orb orb-1"></div>  <!-- Blue orb - top left -->
+  <div class="orb orb-2"></div>  <!-- Pink orb - bottom right -->
+  <div class="orb orb-3"></div>  <!-- Teal orb - middle -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+    NAVIGATION BAR
+    Fixed bar at the top. Contains:
+    - Logo (left)
+    - Nav links (center)
+    - "Hire Me" button (right)
+
+    The onclick on the button uses scrollIntoView() to jump
+    smoothly to the contact section when clicked.
+  ══════════════════════════════════════════════════════════ -->
+  <nav id="mainNav">
+    <!-- Logo: "Chenchu." with the dot in blue -->
+    <div class="nav-logo">Chenchu<span>.</span></div>
+
+    <!-- Navigation links — each href="#sectionId" scrolls to that section -->
+    <ul class="nav-links">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#education">Education</a></li>
+      <li><a href="#experience">Experience</a></li>
+      <li><a href="#certifications">Certifications</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+
+    <!-- Hire Me button — scrolls to contact section on click -->
+    <button class="nav-cta" onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+      Hire Me
+    </button>
+  </nav>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+    HERO SECTION
+    The first thing visitors see. Full screen height.
+    Contains a 2-column grid:
+      Left  → Your name, role, description, buttons
+      Right → The profile card
+  ══════════════════════════════════════════════════════════ -->
+  <section id="hero">
+    <div class="hero-grid">
+
+      <!-- LEFT SIDE: Name + Text + Buttons -->
+      <div class="hero-left">
+
+        <!-- Blinking tag: "Open to opportunities" -->
+        <div class="hero-tag">
+          <span class="dot-anim"></span> <!-- Blinking dot -->
+          Open to opportunities
+        </div>
+
+        <!-- Your big name heading — 3 lines with different styles -->
+        <h1 class="hero-name">
+          Manda<br>
+          <span class="outline">Chenchu</span><br>  <!-- Hollow/outlined text -->
+          <span class="hi">Naidu.</span>             <!-- Blue accent color -->
+        </h1>
+
+        <!-- Your role/title -->
+        <p class="hero-role">
+          MERN Full Stack Dev Trainee &nbsp;·&nbsp;
+          <strong>NxtWave</strong>
+        </p>
+
+        <!-- Short description paragraph -->
+        <p class="hero-desc">
+          Junior Developer with a strong foundation in JavaScript, Responsive Web Design,
+          and SQL. Certified in building mobile-first applications and experienced in
+          leveraging AI tools to accelerate development workflows.
+        </p>
+
+        <!-- Two call-to-action buttons -->
+        <div class="hero-btns">
+          <!-- Button 1: Scrolls to Certifications section -->
+          <button class="btn-primary"
+            onclick="document.getElementById('certifications').scrollIntoView({behavior:'smooth'})">
+            View Certifications
+          </button>
+
+          <!-- Button 2: Scrolls to Contact section -->
+          <button class="btn-ghost"
+            onclick="document.getElementById('contact').scrollIntoView({behavior:'smooth'})">
+            Contact Me →
+          </button>
+        </div>
+
+      </div><!-- end hero-left -->
+
+      <!-- RIGHT SIDE: Profile card (hidden on mobile) -->
+      <div class="hero-avatar">
+        <div class="avatar-card">
+          <span class="avatar-emoji">👨‍💻</span>
+          <div class="avatar-name">Manda Chenchu Naidu</div>
+          <div class="avatar-title">Full Stack Dev Trainee</div>
+          <div class="avatar-location">📍 Srikalahasti, Andhra Pradesh</div>
+
+          <!-- Skill badges -->
+          <div class="avatar-badges">
+            <span class="abadge">MERN Stack</span>
+            <span class="abadge">JavaScript</span>
+            <span class="abadge">Python</span>
+            <span class="abadge">SQL</span>
+          </div>
+
+          <!-- "Available for Work" status -->
+          <div class="status-pill">
+            <span class="status-dot"></span>
+            Available for Work
+          </div>
+        </div>
+      </div><!-- end hero-avatar -->
+
+    </div><!-- end hero-grid -->
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+    STATS STRIP
+    4 numbers in a horizontal row.
+    The class "reveal" makes them fade-in on scroll.
+    The "data-target" attribute tells JavaScript what number to
+    count up to (e.g. data-target="8" counts from 0 to 8).
+  ══════════════════════════════════════════════════════════ -->
+  <div class="stats-strip">
+
+    <div class="stat-item reveal">
+      <!-- data-target="8" → JavaScript animates this to count up to 8 -->
+      <div class="stat-num" data-target="8">0<span>+</span></div>
+      <div class="stat-label">Certifications</div>
+    </div>
+
+    <div class="stat-item reveal">
+      <div class="stat-num" data-target="2">0<span>+</span></div>
+      <div class="stat-label">Internships</div>
+    </div>
+
+    <div class="stat-item reveal">
+      <div class="stat-num" data-target="3">0<span>+</span></div>
+      <div class="stat-label">Degrees / Education</div>
+    </div>
+
+    <div class="stat-item reveal">
+      <div class="stat-num" data-target="1">0<span>+</span></div>
+      <div class="stat-label">Years Training</div>
+    </div>
+
+  </div><!-- end stats-strip -->
+
+
+  <!-- ══════════════════════════════════════════════════════════
+    ABOUT SECTION
+    Two columns: left = paragraphs + info grid, right = 4 cards
+  ══════════════════════════════════════════════════════════ -->
+  <section id="about">
+
+    <!-- Section header -->
+    <div class="section-label">Who I Am</div>
+    <h2 class="section-title reveal">About Me</h2>
+
+    <div class="about-grid">
+
+      <!-- LEFT: About text + info boxes -->
+      <div class="about-text reveal">
+        <p>Hey! I'm <strong>Manda Chenchu Naidu</strong>, a fresher developer from Srikalahasti,
+        Andhra Pradesh currently training as a <strong>MERN Full Stack Developer at NxtWave</strong>.</p>
+
+        <p>I'm a disciplined problem-solver with a strong foundation in JavaScript, Responsive Web Design,
+        and SQL Database Management. I'm passionate about building clean, efficient, and user-centric web solutions.</p>
+
+        <p>I've also completed an MCA in Web/Multimedia Management from the
+        <strong>University of Mysore</strong> and hold a B.Com in Computer Programming from
+        <strong>Gayatri Degree College, Tirupati</strong>.</p>
+
+        <p>I'm experienced with <strong>Generative AI tools</strong> and trained in
+        <strong>Agile methodologies (XPM 4.0)</strong> — always looking to build, learn, and grow.</p>
+
+        <!-- 2x2 grid of info boxes -->
+        <div class="info-grid">
+          <div class="info-item">
+            <div class="ilabel">Location</div>
+            <div class="ival">Srikalahasti, AP</div>
+          </div>
+          <div class="info-item">
+            <div class="ilabel">Phone</div>
+            <div class="ival">9182013149</div>
+          </div>
+          <div class="info-item">
+            <div class="ilabel">Email</div>
+            <div class="ival" style="font-size:12.5px">mandachenchunaidu@gmail.com</div>
+          </div>
+          <div class="info-item">
+            <div class="ilabel">Status</div>
+            <div class="ival" style="color:var(--accent3)">✓ Available</div>
+          </div>
+        </div>
+      </div><!-- end about-text -->
+
+      <!-- RIGHT: 4 highlight cards -->
+      <div class="about-right reveal">
+
+        <div class="highlight-card">
+          <div class="hc-icon">🚀</div>
+          <div class="hc-title">MERN Full Stack Training</div>
+          <div class="hc-desc">Currently mastering MongoDB, Express, React, and Node.js through NxtWave's intensive full-stack program.</div>
+        </div>
+
+        <div class="highlight-card">
+          <div class="hc-icon">🤖</div>
+          <div class="hc-title">AI-Powered Development</div>
+          <div class="hc-desc">Certified in AI Tools (Be10x) — experienced in using Generative AI to speed up workflows and build smarter.</div>
+        </div>
+
+        <div class="highlight-card">
+          <div class="hc-icon">📐</div>
+          <div class="hc-title">Agile Methodology</div>
+          <div class="hc-desc">Trained in XPM 4.0 Agile fundamentals — comfortable working in iterative, team-oriented development cycles.</div>
+        </div>
+
+        <div class="highlight-card">
+          <div class="hc-icon">🎯</div>
+          <div class="hc-title">Digital Marketing</div>
+          <div class="hc-desc">Certified by AP State Council of Higher Education. Interned at Profimaker India Pvt Ltd as a Digital Marketing Trainee.</div>
+        </div>
+
+      </div><!-- end about-right -->
+
+    </div><!-- end about-grid -->
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+    SKILLS SECTION
+    3-column grid with 6 skill group cards.
+    Each card has a title + list of pill tags.
+    Pills come in 3 colors: default (blue), t2 (pink), t3 (teal)
+  ══════════════════════════════════════════════════════════ -->
+  <section id="skills">
+    <div class="section-label">What I Know</div>
+    <h2 class="section-title reveal">Skills &amp; Tech Stack</h2>
+    <!-- &amp; is the HTML code for the "&" character -->
+    <p class="section-sub reveal">Building expertise one commit at a time.</p>
+
+    <div class="skills-section">
+
+      <!-- Skill Group 1: Core Programming (blue pills) -->
+      <div class="skill-group reveal">
+        <div class="sg-title"><span class="sg-icon">💻</span> Core Programming</div>
+        <div class="skill-pill-list">
+          <span class="skill-pill">JavaScript (ES6+)</span>
+          <span class="skill-pill">Python</span>
+          <span class="skill-pill">Logic Building</span>
+          <span class="skill-pill">Algorithms</span>
+          <span class="skill-pill">Data Structures</span>
+        </div>
+      </div>
+
+      <!-- Skill Group 2: Frontend (pink pills - class="t2") -->
+      <div class="skill-group reveal">
+        <div class="sg-title"><span class="sg-icon">🎨</span> Frontend Development</div>
+        <div class="skill-pill-list">
+          <span class="skill-pill t2">HTML5 &amp; CSS3</span>
+          <span class="skill-pill t2">Responsive Design</span>
+          <span class="skill-pill t2">Flexbox Layouts</span>
+          <span class="skill-pill t2">Mobile-First</span>
+          <span class="skill-pill t2">React (Learning)</span>
+        </div>
+      </div>
+
+      <!-- Skill Group 3: Database & Backend (teal pills - class="t3") -->
+      <div class="skill-group reveal">
+        <div class="sg-title"><span class="sg-icon">🗄️</span> Database &amp; Backend</div>
+        <div class="skill-pill-list">
+          <span class="skill-pill t3">SQL Fundamentals</span>
+          <span class="skill-pill t3">RDBMS</span>
+          <span class="skill-pill t3">Node.js (Learning)</span>
+          <span class="skill-pill t3">MongoDB (Learning)</span>
+          <span class="skill-pill t3">Express (Learning)</span>
+        </div>
+      </div>
+
+      <!-- Skill Group 4: AI & Tools (blue pills) -->
+      <div class="skill-group reveal">
+        <div class="sg-title"><span class="sg-icon">🤖</span> AI &amp; Tools</div>
+        <div class="skill-pill-list">
+          <span class="skill-pill">Generative AI Tools</span>
+          <span class="skill-pill">AI Workflow</span>
+          <span class="skill-pill">Prompt Engineering</span>
+        </div>
+      </div>
+
+      <!-- Skill Group 5: Methodology (pink pills) -->
+      <div class="skill-group reveal">
+        <div class="sg-title"><span class="sg-icon">📋</span> Methodology</div>
+        <div class="skill-pill-list">
+          <span class="skill-pill t2">Agile (XPM 4.0)</span>
+          <span class="skill-pill t2">Problem Solving</span>
+          <span class="skill-pill t2">Team Collaboration</span>
+        </div>
+      </div>
+
+      <!-- Skill Group 6: Marketing (teal pills) -->
+      <div class="skill-group reveal">
+        <div class="sg-title"><span class="sg-icon">📣</span> Marketing</div>
+        <div class="skill-pill-list">
+          <span class="skill-pill t3">Digital Marketing</span>
+          <span class="skill-pill t3">SEO Basics</span>
+          <span class="skill-pill t3">Online Campaigns</span>
+        </div>
+      </div>
+
+    </div><!-- end skills-section -->
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+    EDUCATION SECTION
+    3 cards for your 3 education levels.
+    Classes e1, e2, e3 give each card a different color top stripe.
+  ══════════════════════════════════════════════════════════ -->
+  <section id="education">
+    <div class="section-label">Academic Journey</div>
+    <h2 class="section-title reveal">Education</h2>
+
+    <div class="edu-grid">
+
+      <!-- Education Card 1: MCA (blue→pink top stripe) -->
+      <div class="edu-card e1 reveal">
+        <div class="edu-icon">🎓</div>
+        <div class="edu-degree">Master of Computer Applications (MCA)</div>
+        <div class="edu-school">University of Mysore</div>
+        <div class="edu-meta">
+          Web / Multimedia Management &amp; Webmaster<br>
+          📅 Jan 2024 — Present
+        </div>
+        <span class="edu-gpa">Currently Pursuing</span>
+      </div>
+
+      <!-- Education Card 2: B.Com (pink→teal top stripe) -->
+      <div class="edu-card e2 reveal">
+        <div class="edu-icon">📚</div>
+        <div class="edu-degree">Bachelor of Commerce (B.Com)</div>
+        <div class="edu-school">Gayatri Degree College, Tirupati Urban</div>
+        <div class="edu-meta">
+          Computer Programming &amp; Specific Applications<br>
+          📅 Jan 2021 — Dec 2024
+        </div>
+        <span class="edu-gpa">🏅 Grade: A</span>
+      </div>
+
+      <!-- Education Card 3: Secondary (teal→blue top stripe) -->
+      <div class="edu-card e3 reveal">
+        <div class="edu-icon">🏫</div>
+        <div class="edu-degree">Secondary School of Education</div>
+        <div class="edu-school">Bhashyam College of Education (BCE), Guntur</div>
+        <div class="edu-meta">📅 Jan 2018 — Dec 2019</div>
+        <span class="edu-gpa">⭐ GPA: 9.7</span>
+      </div>
+
+    </div><!-- end edu-grid -->
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+    EXPERIENCE SECTION
+    3 work experience cards.
+    Note: the 3rd card uses style="grid-column:1/-1" to span
+    the full width of the 2-column grid.
+  ══════════════════════════════════════════════════════════ -->
+  <section id="experience">
+    <div class="section-label">Work Experience</div>
+    <h2 class="section-title reveal">Experience</h2>
+
+    <div class="exp-grid">
+
+      <!-- Experience 1: TCS Internship -->
+      <div class="exp-card reveal">
+        <div class="exp-top">
+          <div class="exp-company">TATA (TCS)</div>
+          <span class="exp-type">Internship</span>
+        </div>
+        <div class="exp-role">TCS Sustainability Research Colleague</div>
+        <div class="exp-period">📅 Feb 2026 — Feb 2026 &nbsp;·&nbsp; Remote</div>
+        <div class="exp-desc">
+          Contributed to sustainability research at TCS. Worked on analysing ESG data
+          and supporting research documentation in a remote environment under the
+          Tata Consultancy Services banner.
+        </div>
+      </div>
+
+      <!-- Experience 2: Digital Marketing Trainee -->
+      <div class="exp-card reveal">
+        <div class="exp-top">
+          <div class="exp-company">Profimaker India Pvt Ltd</div>
+          <!-- "trainee" class makes this badge pink instead of blue -->
+          <span class="exp-type trainee">Trainee</span>
+        </div>
+        <div class="exp-role">Digital Marketing Trainee</div>
+        <div class="exp-period">📅 Feb 2024 — May 2024 &nbsp;·&nbsp; Visakhapatnam, AP</div>
+        <div class="exp-desc">
+          Trained in digital marketing strategies including social media management,
+          SEO, and online campaign execution. Gained hands-on experience in promoting
+          brands and managing digital content.
+        </div>
+      </div>
+
+      <!-- Experience 3: NxtWave (spans full width using inline style) -->
+      <div class="exp-card reveal" style="grid-column: 1 / -1">
+        <!-- grid-column: 1 / -1 means: start from column 1 to the last column -->
+        <div class="exp-top">
+          <div class="exp-company">NxtWave</div>
+          <span class="exp-type">Training Program</span>
+        </div>
+        <div class="exp-role">MERN Full Stack Development Trainee</div>
+        <div class="exp-period">📅 Jan 2024 — Present &nbsp;·&nbsp; Remote</div>
+        <div class="exp-desc">
+          Undergoing intensive full-stack web development training covering JavaScript (ES6+),
+          HTML5, CSS3, Responsive Web Design, SQL, React, Node.js, Express, and MongoDB.
+          Completed multiple certifications and built projects using modern development
+          practices and Agile methodologies (XPM 4.0).
+        </div>
+      </div>
+
+    </div><!-- end exp-grid -->
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+    CERTIFICATIONS SECTION
+    10 certificate cards in an auto-fill grid.
+    Each card has: icon + name + issuer + date.
+  ══════════════════════════════════════════════════════════ -->
+  <section id="certifications">
+    <div class="section-label">Credentials</div>
+    <h2 class="section-title reveal">Certifications</h2>
+    <p class="section-sub reveal">Continuous learning through structured programs.</p>
+
+    <div class="cert-grid">
+
+      <div class="cert-card reveal">
+        <div class="cert-icon">🏆</div>
+        <div class="cert-body">
+          <div class="cert-name">Programming Foundations</div>
+          <div class="cert-issuer">NxtWave</div>
+          <div class="cert-date">📅 Dec 2025 — Present</div>
+        </div>
+      </div>
+
+      <div class="cert-card reveal">
+        <div class="cert-icon">🏆</div>
+        <div class="cert-body">
+          <div class="cert-name">Developer Foundations</div>
+          <div class="cert-issuer">NxtWave</div>
+          <div class="cert-date">📅 Nov 2025 — Present</div>
+        </div>
+      </div>
+
+      <div class="cert-card reveal">
+        <div class="cert-icon">🏆</div>
+        <div class="cert-body">
+          <div class="cert-name">JavaScript Essentials</div>
+          <div class="cert-issuer">NxtWave</div>
+          <div class="cert-date">📅 Nov 2025 — Present</div>
+        </div>
+      </div>
+
+      <div class="cert-card reveal">
+        <div class="cert-icon">🏆</div>
+        <div class="cert-body">
+          <div class="cert-name">Responsive Web Design using Flexbox</div>
+          <div class="cert-issuer">NxtWave</div>
+          <div class="cert-date">📅 Nov 2025 — Present</div>
+        </div>
+      </div>
+
+      <div class="cert-card reveal">
+        <div class="cert-icon">🤖</div>
+        <div class="cert-body">
+          <div class="cert-name">AI Tools Workshop</div>
+          <div class="cert-issuer">Be10x</div>
+          <div class="cert-date">📅 Aug 2025 — Present</div>
+        </div>
+      </div>
+
+      <div class="cert-card reveal">
+        <div class="cert-icon">📋</div>
+        <div class="cert-body">
+          <div class="cert-name">XPM 4.0 Fundamentals (Agile)</div>
+          <div class="cert-issuer">NxtWave</div>
+          <div class="cert-date">📅 Mar 2025 — Present</div>
+        </div>
+      </div>
+
+      <div class="cert-card reveal">
+        <div class="cert-icon">🗄️</div>
+        <div class="cert-body">
+          <div class="cert-name">Introduction to Databases</div>
+          <div class="cert-issuer">NxtWave</div>
+          <div class="cert-date">📅 Mar 2025 — Present</div>
+        </div>
+      </div>
+
+      <div class="cert-card reveal">
+        <div class="cert-icon">📱</div>
+        <div class="cert-body">
+          <div class="cert-name">Build Your Own Responsive Website</div>
+          <div class="cert-issuer">NxtWave</div>
+          <div class="cert-date">📅 Nov 2024 — Present</div>
+        </div>
+      </div>
+
+      <div class="cert-card reveal">
+        <div class="cert-icon">🌐</div>
+        <div class="cert-body">
+          <div class="cert-name">Build Your Own Static Website</div>
+          <div class="cert-issuer">NxtWave</div>
+          <div class="cert-date">📅 Nov 2024 — Present</div>
+        </div>
+      </div>
+
+      <div class="cert-card reveal">
+        <div class="cert-icon">📣</div>
+        <div class="cert-body">
+          <div class="cert-name">Digital Marketing Certification</div>
+          <div class="cert-issuer">AP State Council of Higher Education</div>
+          <div class="cert-date">📅 May 2024 — Present</div>
+        </div>
+      </div>
+
+    </div><!-- end cert-grid -->
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+    CONTACT SECTION
+    Centered layout with:
+    - 3 clickable contact link cards
+    - A message form (name, email, subject, message, send button)
+  ══════════════════════════════════════════════════════════ -->
+  <section id="contact">
+    <div class="contact-inner">
+
+      <div class="section-label">Get In Touch</div>
+      <h2 class="section-title reveal">Let's Connect!</h2>
+      <p class="reveal">
+        I'm actively looking for opportunities as a fresher developer.
+        Whether it's a job, internship, freelance project, or just a conversation — feel free to reach out!
+      </p>
+
+      <!-- 3 contact link cards -->
+      <div class="contact-cards reveal">
+        <!-- href="mailto:..." opens the email app when clicked -->
+        <a href="mailto:mandachenchunaidu@gmail.com" class="contact-card">
+          <span class="cicon">📧</span> mandachenchunaidu@gmail.com
+        </a>
+
+        <!-- href="tel:..." opens the phone dialer when clicked on mobile -->
+        <a href="tel:9182013149" class="contact-card">
+          <span class="cicon">📱</span> 9182013149
+        </a>
+
+        <!-- Opens LinkedIn in a new tab (target="_blank") -->
+        <a href="https://www.linkedin.com/in/chenchu-naidu-manda-9095b8325/" target="_blank" class="contact-card">
+          <span class="cicon">💼</span> LinkedIn
+        </a>
+      </div>
+
+      <!-- Message Form -->
+      <div class="contact-form reveal">
+
+        <!-- Row 1: Name + Email side by side -->
+        <div class="form-row">
+          <div class="form-group">
+            <label>Your Name</label>
+            <input type="text" placeholder="Your full name">
+          </div>
+          <div class="form-group">
+            <label>Your Email</label>
+            <input type="email" placeholder="your@email.com">
+          </div>
+        </div>
+
+        <!-- Row 2: Subject (full width) -->
+        <div class="form-group">
+          <label>Subject</label>
+          <input type="text" placeholder="Job Offer / Internship / Project / Just saying hi...">
+        </div>
+
+        <!-- Row 3: Message textarea -->
+        <div class="form-group">
+          <label>Message</label>
+          <textarea rows="4" placeholder="Tell me about the opportunity or just say hello..."></textarea>
+        </div>
+
+        <!-- Send button — onclick calls the handleSend() function in JavaScript -->
+        <button class="btn-send" onclick="handleSend(this)">Send Message ✦</button>
+
+      </div><!-- end contact-form -->
+
+    </div><!-- end contact-inner -->
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════════════
+    FOOTER
+    Bottom bar with: Logo | Copyright text | Social icons
+  ══════════════════════════════════════════════════════════ -->
+  <footer>
+    <div class="footer-logo">Chenchu<span>.</span></div>
+    <p>© 2025 Manda Chenchu Naidu · Srikalahasti, Andhra Pradesh</p>
+    <div class="social-links">
+      <a href="https://www.linkedin.com/in/chenchu-naidu-manda-9095b8325/" target="_blank" title="LinkedIn">💼</a>
+      <a href="mailto:mandachenchunaidu@gmail.com" title="Email">📧</a>
+      <a href="tel:9182013149" title="Phone">📱</a>
+    </div>
+  </footer>
+
+
+  <!-- ============================================================
+    JAVASCRIPT
+    Placed at the BOTTOM of body (best practice) so that all
+    the HTML elements above are already loaded before JS runs.
+
+    This file has 3 JavaScript features:
+      1. Nav shrink  → Makes nav smaller when you scroll down
+      2. Scroll reveal → Fades elements in as you scroll to them
+      3. Count-up    → Animates numbers (0 → 8, 0 → 2, etc.)
+      4. Send button → Shows "Message Sent!" feedback on click
+  ============================================================ -->
+  <script>
+
+    /* ── 1. NAV SHRINK ON SCROLL ─────────────────────────────────
+       Listen for the scroll event on the window.
+       If user has scrolled more than 50px down,
+       reduce nav padding to make it smaller.
+       If back at top, restore original padding.
+    ─────────────────────────────────────────────────────────── */
+    window.addEventListener('scroll', function() {
+      var nav = document.getElementById('mainNav');
+
+      if (window.scrollY > 50) {
+        // Scrolled down: tighter padding
+        nav.style.padding = '13px 6%';
+      } else {
+        // Back at top: original padding
+        nav.style.padding = '20px 6%';
+      }
+    });
+
+
+    /* ── 2. SCROLL REVEAL ────────────────────────────────────────
+       IntersectionObserver watches elements and fires a callback
+       when they enter (or leave) the visible screen area.
+
+       How it works:
+       - We select all elements with class "reveal"
+       - We "observe" each one
+       - When an element enters the viewport (is visible),
+         we add the class "visible" to it
+       - The CSS for .reveal.visible makes it fade in
+       - We then "unobserve" it so it doesn't trigger again
+
+       threshold: 0.12 means → trigger when 12% of the element
+       is visible on screen.
+    ─────────────────────────────────────────────────────────── */
+    var observer = new IntersectionObserver(function(entries) {
+
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          // Element is now visible — add "visible" class
+          entry.target.classList.add('visible');
+
+          // If this element contains a stat number, animate it
+          var numEl = entry.target.querySelector('[data-target]');
+          if (numEl) {
+            animateCount(numEl);
+          }
+
+          // Stop watching this element (so it only animates once)
+          observer.unobserve(entry.target);
+        }
+      });
+
+    }, { threshold: 0.12 });
+
+    // Apply the observer to all elements with class "reveal"
+    document.querySelectorAll('.reveal').forEach(function(el) {
+      observer.observe(el);
+    });
+
+    // Also observe stat items (they contain the count-up numbers)
+    document.querySelectorAll('.stat-item').forEach(function(el) {
+      observer.observe(el);
+    });
+
+
+    /* ── 3. COUNT-UP ANIMATION ───────────────────────────────────
+       This function takes a number element and animates it
+       counting up from 0 to the target number.
+
+       How it works:
+       - Read the "data-target" attribute (e.g. "8")
+       - Use setInterval to repeatedly increase the number
+       - Update the element's HTML each time
+       - Stop when we reach the target
+
+       setInterval(fn, ms) → runs fn every ms milliseconds
+       clearInterval(t)    → stops the interval
+    ─────────────────────────────────────────────────────────── */
+    function animateCount(el) {
+      var target = parseInt(el.getAttribute('data-target')); // e.g. 8
+      var suffix = el.querySelector('span') ? el.querySelector('span').textContent : '';
+      var count = 0;
+      var step = Math.max(1, Math.ceil(target / 35)); // How much to add each tick
+
+      var timer = setInterval(function() {
+        count = Math.min(count + step, target); // Add step, but don't go over target
+        el.innerHTML = count + '<span>' + suffix + '</span>'; // Update display
+
+        if (count >= target) {
+          clearInterval(timer); // Stop when we reach the target
+        }
+      }, 40); // Run every 40ms
+    }
+
+
+    /* ── 4. SEND BUTTON FEEDBACK ─────────────────────────────────
+       When the "Send Message" button is clicked:
+       - Change button text to "✓ Message Sent!"
+       - Change button color to green
+       - After 3 seconds, reset it back to normal
+
+       This is just a visual demo — to actually send emails
+       you'd need a backend service like EmailJS or Formspree.
+    ─────────────────────────────────────────────────────────── */
+    function handleSend(btn) {
+      // Show success state
+      btn.textContent = '✓ Message Sent!';
+      btn.style.background = '#22c55e';  // Green color
+      btn.style.boxShadow = '0 8px 28px rgba(34,197,94,.4)';
+
+      // After 3 seconds (3000ms), reset the button
+      setTimeout(function() {
+        btn.textContent = 'Send Message ✦';
+        btn.style.background = '';  // Remove inline style (goes back to CSS default)
+        btn.style.boxShadow = '';
+      }, 3000);
+    }
+
+  </script>
+
+</body>
+</html>
